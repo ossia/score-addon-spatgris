@@ -1,6 +1,11 @@
 #pragma once
 #include <Device/Protocol/DeviceInterface.hpp>
 
+namespace Explorer
+{
+class DeviceDocumentPlugin;
+}
+
 namespace MyDevice
 {
 class DeviceImplementation final : public Device::OwningDeviceInterface
@@ -9,6 +14,7 @@ class DeviceImplementation final : public Device::OwningDeviceInterface
 public:
   DeviceImplementation(
       const Device::DeviceSettings& settings,
+      const Explorer::DeviceDocumentPlugin& plugin,
       const score::DocumentContext& ctx);
   ~DeviceImplementation();
 
@@ -16,6 +22,6 @@ public:
   void disconnect() override;
 
 private:
-  const score::DocumentContext& m_ctx;
+  const Explorer::DeviceDocumentPlugin& m_ctx;
 };
 }

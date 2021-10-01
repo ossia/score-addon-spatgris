@@ -36,9 +36,10 @@ ProtocolFactory::getEnumerator(const score::DocumentContext& ctx) const
 
 Device::DeviceInterface* ProtocolFactory::makeDevice(
     const Device::DeviceSettings& settings,
+    const Explorer::DeviceDocumentPlugin& plugin,
     const score::DocumentContext& ctx)
 {
-  return new MyDevice::DeviceImplementation{settings, ctx};
+  return new MyDevice::DeviceImplementation{settings, plugin, ctx};
 }
 
 const Device::DeviceSettings& ProtocolFactory::defaultSettings() const noexcept

@@ -19,9 +19,10 @@ namespace MyDevice
 {
 DeviceImplementation::DeviceImplementation(
     const Device::DeviceSettings& settings,
-    const score::DocumentContext& ctx)
+    const Explorer::DeviceDocumentPlugin& plugin,
+    const score::DocumentContext&)
     : OwningDeviceInterface{settings}
-    , m_ctx{ctx}
+    , m_ctx{plugin}
 {
   m_capas.canRefreshTree = true;
   m_capas.canAddNode = false;
@@ -44,7 +45,7 @@ bool DeviceImplementation::reconnect()
     qDebug() << "MyDevice created with: " << set.control;
 
     // Needed by most protocols:
-    auto& ctx = m_ctx.plugin<Explorer::DeviceDocumentPlugin>().asioContext;
+    auto& ctx = m_ctx.networkContext();
 
     auto protocol = std::make_unique<ossia::net::multiplex_protocol>();
     auto dev = std::make_unique<ossia::net::generic_device>(
