@@ -28,10 +28,10 @@ QString ProtocolFactory::category() const noexcept
   return StandardCategories::lights;
 }
 
-Device::DeviceEnumerator*
-ProtocolFactory::getEnumerator(const score::DocumentContext& ctx) const
+Device::DeviceEnumerators
+ProtocolFactory::getEnumerators(const score::DocumentContext& ctx) const
 {
-  return nullptr;
+  return {};
 }
 
 Device::DeviceInterface* ProtocolFactory::makeDevice(

@@ -10,8 +10,8 @@ class ProtocolFactory final : public Protocols::DefaultProtocolFactory
 
   QString prettyName() const noexcept override;
   QString category() const noexcept override;
-  Device::DeviceEnumerator*
-  getEnumerator(const score::DocumentContext& ctx) const override;
+  Device::DeviceEnumerators
+  getEnumerators(const score::DocumentContext& ctx) const override;
 
   Device::DeviceInterface* makeDevice(
       const Device::DeviceSettings& settings,
