@@ -8,7 +8,7 @@ score_addon_my_device::score_addon_my_device() { }
 
 score_addon_my_device::~score_addon_my_device() { }
 
-std::vector<std::unique_ptr<score::InterfaceBase>>
+std::vector<score::InterfaceBase*>
 score_addon_my_device::factories(
     const score::ApplicationContext& ctx,
     const score::InterfaceKey& key) const
