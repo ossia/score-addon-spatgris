@@ -6,7 +6,7 @@ namespace Explorer
 class DeviceDocumentPlugin;
 }
 
-namespace MyDevice
+namespace SpatGRIS
 {
 class DeviceImplementation final : public Device::OwningDeviceInterface
 {

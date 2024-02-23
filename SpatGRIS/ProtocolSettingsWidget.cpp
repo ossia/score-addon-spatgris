@@ -28,15 +28,15 @@
 
 #include <wobjectimpl.h>
 
-W_OBJECT_IMPL(MyDevice::ProtocolSettingsWidget)
+W_OBJECT_IMPL(SpatGRIS::ProtocolSettingsWidget)
 
-namespace MyDevice
+namespace SpatGRIS
 {
 ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
     : Device::ProtocolSettingsWidget(parent)
 {
   m_deviceNameEdit = new State::AddressFragmentLineEdit{this};
-  m_deviceNameEdit->setText("MyDevice");
+  m_deviceNameEdit->setText("SpatGRIS");
 
   m_control = new QSpinBox{this};
   m_control->setRange(1, 65535);

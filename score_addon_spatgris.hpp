@@ -11,15 +11,15 @@
 #include <utility>
 #include <vector>
 
-class score_addon_my_device final
+class score_addon_spatgris final
     : public score::Plugin_QtInterface
     , public score::FactoryInterface_QtInterface
 {
-  SCORE_PLUGIN_METADATA(1, "00000000-0000-0000-0000-000000000000")
+  SCORE_PLUGIN_METADATA(1, "cc255579-4727-4af8-921c-97ce671cc984")
 
 public:
-  score_addon_my_device();
-  ~score_addon_my_device() override;
+  score_addon_spatgris();
+  ~score_addon_spatgris() override;
 
 private:
   std::vector<score::InterfaceBase*> factories(

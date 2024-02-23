@@ -2,7 +2,7 @@
 #include <Device/Protocol/DeviceSettings.hpp>
 #include <Device/Protocol/ProtocolSettingsWidget.hpp>
 
-#include <MyDevice/SpecificSettings.hpp>
+#include <SpatGRIS/SpecificSettings.hpp>
 
 #include <variant>
 #include <verdigris>
@@ -12,7 +12,7 @@ class QSpinBox;
 class QTableWidget;
 class QPushButton;
 
-namespace MyDevice
+namespace SpatGRIS
 {
 class ProtocolSettingsWidget final : public Device::ProtocolSettingsWidget
 {

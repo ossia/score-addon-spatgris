@@ -1,12 +1,12 @@
 #pragma once
 #include <Explorer/DefaultProtocolFactory.hpp>
 
-namespace MyDevice
+namespace SpatGRIS
 {
 
 class ProtocolFactory final : public Protocols::DefaultProtocolFactory
 {
-  SCORE_CONCRETE("00000000-0000-0000-0000-000000000000")
+  SCORE_CONCRETE("b96e0e26-c932-40a4-9640-782bf357840e")
 
   QString prettyName() const noexcept override;
   QString category() const noexcept override;

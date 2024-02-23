@@ -3,7 +3,7 @@
 
 #include <verdigris>
 
-namespace MyDevice
+namespace SpatGRIS
 {
 struct SpecificSettings
 {
@@ -11,5 +11,5 @@ struct SpecificSettings
 };
 }
 
-Q_DECLARE_METATYPE(MyDevice::SpecificSettings)
-W_REGISTER_ARGTYPE(MyDevice::SpecificSettings)
+Q_DECLARE_METATYPE(SpatGRIS::SpecificSettings)
+W_REGISTER_ARGTYPE(SpatGRIS::SpecificSettings)
