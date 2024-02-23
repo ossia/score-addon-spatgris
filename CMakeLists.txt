@@ -13,6 +13,7 @@ score_common_setup()
 add_library(score_addon_spatgris
   SpatGRIS/Device.cpp
   SpatGRIS/Device.hpp
+  SpatGRIS/Protocol.hpp
   SpatGRIS/ProtocolFactory.cpp
   SpatGRIS/ProtocolFactory.hpp
   SpatGRIS/ProtocolSettingsWidget.cpp

@@ -1,5 +1,6 @@
 #include "Device.hpp"
 
+#include "Protocol.hpp"
 #include "SpecificSettings.hpp"
 
 #include <Explorer/DocumentPlugin/DeviceDocumentPlugin.hpp>
@@ -40,14 +41,11 @@ bool DeviceImplementation::reconnect()
 
   try
   {
-    const auto& set
-        = m_settings.deviceSpecificSettings.value<SpecificSettings>();
-    qDebug() << "SpatGRIS created with: " << set.control;
+    auto socket = ossia::net::socket_configuration{
+        .host = "127.0.0.1", .port = 18032, .broadcast = false};
 
-    // Needed by most protocols:
-    auto& ctx = m_ctx.networkContext();
-
-    auto protocol = std::make_unique<ossia::net::multiplex_protocol>();
+    auto protocol = std::make_unique<ossia::spatgris_protocol>(
+        this->m_ctx.networkContext(), socket);
     auto dev = std::make_unique<ossia::net::generic_device>(
         std::move(protocol), settings().name.toStdString());
 
