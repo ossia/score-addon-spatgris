@@ -39,13 +39,17 @@ bool DeviceImplementation::reconnect()
 {
   disconnect();
 
+  const auto& set
+      = m_settings.deviceSpecificSettings.value<SpecificSettings>();
   try
   {
     auto socket = ossia::net::socket_configuration{
-        .host = "127.0.0.1", .port = 18032, .broadcast = false};
+        .host = set.host.toStdString(),
+        .port = (uint16_t)set.port,
+        .broadcast = false};
 
     auto protocol = std::make_unique<ossia::spatgris_protocol>(
-        this->m_ctx.networkContext(), socket);
+        this->m_ctx.networkContext(), socket, set.sources);
     auto dev = std::make_unique<ossia::net::generic_device>(
         std::move(protocol), settings().name.toStdString());
 

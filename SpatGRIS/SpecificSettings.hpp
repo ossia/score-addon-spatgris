@@ -7,7 +7,9 @@ namespace SpatGRIS
 {
 struct SpecificSettings
 {
-  int control{1234};
+  QString host = "127.0.0.1";
+  int port{18032};
+  int sources{128};
 };
 }
 

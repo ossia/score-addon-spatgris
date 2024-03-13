@@ -25,7 +25,7 @@ QString ProtocolFactory::prettyName() const noexcept
 
 QString ProtocolFactory::category() const noexcept
 {
-  return StandardCategories::lights;
+  return StandardCategories::software;
 }
 
 Device::DeviceEnumerators
@@ -49,8 +49,7 @@ const Device::DeviceSettings& ProtocolFactory::defaultSettings() const noexcept
     Device::DeviceSettings s;
     s.protocol = concreteKey();
     s.name = "SpatGRIS";
-    SpecificSettings settings;
-    s.deviceSpecificSettings = QVariant::fromValue(settings);
+    s.deviceSpecificSettings = QVariant::fromValue(SpecificSettings{});
     return s;
   }();
 

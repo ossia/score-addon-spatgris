@@ -38,12 +38,26 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
   m_deviceNameEdit = new State::AddressFragmentLineEdit{this};
   m_deviceNameEdit->setText("SpatGRIS");
 
+  m_host = new QLineEdit(this);
+  m_host->setText("127.0.0.1");
+  m_host->setWhatsThis(
+      tr("IP address of the computer SpatGRIS is running on."));
+
+  m_port = new QSpinBox(this);
+  m_port->setRange(0, 65535);
+  m_port->setValue(18032);
+  m_port->setWhatsThis(
+      tr("On which port SpatGRIS is expecting OSC messages."));
+
   m_control = new QSpinBox{this};
-  m_control->setRange(1, 65535);
+  m_control->setRange(1, 256);
+  m_control->setValue(32);
 
   auto layout = new QFormLayout;
   layout->addRow(tr("Name"), m_deviceNameEdit);
-  layout->addRow(tr("Control"), m_control);
+  layout->addRow(tr("Host"), m_host);
+  layout->addRow(tr("Port"), m_port);
+  layout->addRow(tr("Source count"), m_control);
 
   setLayout(layout);
 }
@@ -58,7 +72,9 @@ Device::DeviceSettings ProtocolSettingsWidget::getSettings() const
   s.protocol = ProtocolFactory::static_concreteKey();
 
   SpecificSettings settings{};
-  settings.control = this->m_control->value();
+  settings.host = this->m_host->text();
+  settings.port = this->m_port->value();
+  settings.sources = this->m_control->value();
   s.deviceSpecificSettings = QVariant::fromValue(settings);
 
   return s;
@@ -70,6 +86,8 @@ void ProtocolSettingsWidget::setSettings(
   m_deviceNameEdit->setText(settings.name);
   const auto& specif
       = settings.deviceSpecificSettings.value<SpecificSettings>();
-  m_control->setValue(specif.control);
+  m_host->setText(specif.host);
+  m_port->setValue(specif.port);
+  m_control->setValue(specif.sources);
 }
 }

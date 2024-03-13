@@ -26,6 +26,8 @@ public:
 
 private:
   QLineEdit* m_deviceNameEdit{};
+  QLineEdit* m_host{};
+  QSpinBox* m_port{};
   QSpinBox* m_control{};
 };
 }

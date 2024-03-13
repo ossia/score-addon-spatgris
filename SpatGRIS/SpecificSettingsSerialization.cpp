@@ -6,25 +6,29 @@
 template <>
 void DataStreamReader::read(const SpatGRIS::SpecificSettings& n)
 {
-  m_stream << n.control;
+  m_stream << n.host << n.port << n.sources;
   insertDelimiter();
 }
 
 template <>
 void DataStreamWriter::write(SpatGRIS::SpecificSettings& n)
 {
-  m_stream >> n.control;
+  m_stream >> n.host >> n.port >> n.sources;
   checkDelimiter();
 }
 
 template <>
 void JSONReader::read(const SpatGRIS::SpecificSettings& n)
 {
-  obj["Control"] = n.control;
+  obj["Host"] = n.host;
+  obj["Port"] = n.port;
+  obj["Sources"] = n.sources;
 }
 
 template <>
 void JSONWriter::write(SpatGRIS::SpecificSettings& n)
 {
-  n.control <<= obj["Control"];
+  n.host <<= obj["Host"];
+  n.port <<= obj["Port"];
+  n.sources <<= obj["Sources"];
 }

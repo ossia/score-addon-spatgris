@@ -20,7 +20,7 @@ struct spatgris_model
     float hspan{}, vspan{};
   };
 
-  source sources[128];
+  source sources[256];
 };
 
 class spatgris_protocol final : public ossia::net::protocol_base
@@ -28,8 +28,10 @@ class spatgris_protocol final : public ossia::net::protocol_base
 public:
   explicit spatgris_protocol(
       const ossia::net::network_context_ptr& ctx,
-      const ossia::net::socket_configuration& socket)
+      const ossia::net::socket_configuration& socket,
+      int source_count)
       : ossia::net::protocol_base{flags{}}
+      , m_sources{std::clamp(source_count, 1, 256)}
       , m_socket{socket, ctx->context}
   {
     m_socket.connect();
@@ -38,12 +40,14 @@ public:
   void set_device(ossia::net::device_base& dev) override
   {
     using namespace ossia::net;
-    for (auto* node : create_nodes(dev.get_root_node(), "/{1..128}/clear"))
+    std::string root
+        = m_sources == 1 ? "/1" : fmt::format("/{{1..{}}}", m_sources);
+    for (auto* node : create_nodes(dev.get_root_node(), root + "/clear"))
     {
       node->create_parameter(ossia::val_type::IMPULSE);
     }
 
-    for (auto* node : create_nodes(dev.get_root_node(), "/{1..128}/algorithm"))
+    for (auto* node : create_nodes(dev.get_root_node(), root + "/algorithm"))
     {
       auto p = node->create_parameter(ossia::val_type::STRING);
       p->set_value("dome");
@@ -51,7 +55,7 @@ public:
           ossia::make_domain(std::vector<std::string>{"dome", "cube"}));
     }
 
-    for (auto* node : create_nodes(dev.get_root_node(), "/{1..128}/position"))
+    for (auto* node : create_nodes(dev.get_root_node(), root + "/position"))
     {
       auto p = node->create_parameter(ossia::val_type::VEC3F);
       p->set_value(ossia::vec3f{});
@@ -59,14 +63,14 @@ public:
       p->set_domain(ossia::make_domain(-1.66f, 1.66f));
     }
 
-    for (auto* node : create_nodes(dev.get_root_node(), "/{1..128}/hspan"))
+    for (auto* node : create_nodes(dev.get_root_node(), root + "/hspan"))
     {
       auto p = node->create_parameter(ossia::val_type::FLOAT);
       p->set_value(0.f);
       p->set_domain(ossia::make_domain(0.f, 1.f));
     }
 
-    for (auto* node : create_nodes(dev.get_root_node(), "/{1..128}/vspan"))
+    for (auto* node : create_nodes(dev.get_root_node(), root + "/vspan"))
     {
       auto p = node->create_parameter(ossia::val_type::FLOAT);
       p->set_value(0.f);
@@ -173,6 +177,7 @@ public:
   bool update(net::node_base& node_base) override { return false; }
 
 private:
+  int m_sources{0};
   ossia::net::udp_send_socket m_socket;
 
   spatgris_model m_model;
