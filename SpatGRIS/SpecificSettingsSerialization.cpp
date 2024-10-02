@@ -25,10 +25,12 @@ void JSONReader::read(const SpatGRIS::SpecificSettings& n)
   obj["Sources"] = n.sources;
 }
 
-template <>
-void JSONWriter::write(SpatGRIS::SpecificSettings& n)
+template<>
+void JSONWriter::write(SpatGRIS::SpecificSettings &n)
 {
-  n.host <<= obj["Host"];
-  n.port <<= obj["Port"];
-  n.sources <<= obj["Sources"];
+    if (!obj.tryGet("Host"))
+        return;
+    n.host <<= obj["Host"];
+    n.port <<= obj["Port"];
+    n.sources <<= obj["Sources"];
 }
