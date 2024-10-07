@@ -78,6 +78,6 @@ bool ProtocolFactory::checkCompatibility(
     const Device::DeviceSettings& a,
     const Device::DeviceSettings& b) const noexcept
 {
-  return false;
+  return true;
 }
 }
