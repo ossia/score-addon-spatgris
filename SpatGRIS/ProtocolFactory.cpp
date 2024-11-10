@@ -14,6 +14,7 @@
 #include <QDialogButtonBox>
 #include <QFormLayout>
 #include <QObject>
+#include <QUrl>
 
 namespace SpatGRIS
 {
@@ -26,6 +27,11 @@ QString ProtocolFactory::prettyName() const noexcept
 QString ProtocolFactory::category() const noexcept
 {
   return StandardCategories::software;
+}
+
+QUrl ProtocolFactory::manual() const noexcept
+{
+  return QUrl("https://ossia.io/score-docs/devices/spatgris-device.html");
 }
 
 Device::DeviceEnumerators
