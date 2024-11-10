@@ -28,7 +28,7 @@ class spatgris_protocol final : public ossia::net::protocol_base
 public:
   explicit spatgris_protocol(
       const ossia::net::network_context_ptr& ctx,
-      const ossia::net::socket_configuration& socket,
+      const ossia::net::outbound_socket_configuration& socket,
       int source_count)
       : ossia::net::protocol_base{flags{}}
       , m_sources{std::clamp(source_count, 1, 256)}

@@ -43,7 +43,7 @@ bool DeviceImplementation::reconnect()
       = m_settings.deviceSpecificSettings.value<SpecificSettings>();
   try
   {
-    auto socket = ossia::net::socket_configuration{
+    auto socket = ossia::net::outbound_socket_configuration{
         .host = set.host.toStdString(),
         .port = (uint16_t)set.port,
         .broadcast = false};
