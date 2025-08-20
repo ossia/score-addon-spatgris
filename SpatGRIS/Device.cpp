@@ -48,8 +48,24 @@ bool DeviceImplementation::reconnect()
         .port = (uint16_t)set.port,
         .broadcast = false};
 
-    auto protocol = std::make_unique<ossia::spatgris_protocol>(
-        this->m_ctx.networkContext(), socket, set.sources);
+    std::unique_ptr<ossia::net::protocol_base> protocol;
+    
+    switch(set.format)
+    {
+      case SpatFormat::SpatGRIS:
+        protocol = std::make_unique<Spatialization::SpatGRISProtocol>(
+            this->m_ctx.networkContext(), socket, set.sources);
+        break;
+      case SpatFormat::ADMOSC:
+        protocol = std::make_unique<Spatialization::ADMOSCProtocol>(
+            this->m_ctx.networkContext(), socket, set.sources);
+        break;
+      case SpatFormat::SPAT:
+        protocol = std::make_unique<Spatialization::SPATProtocol>(
+            this->m_ctx.networkContext(), socket, set.sources, set.programs);
+        break;
+    }
+    
     auto dev = std::make_unique<ossia::net::generic_device>(
         std::move(protocol), settings().name.toStdString());
 
@@ -58,11 +74,11 @@ bool DeviceImplementation::reconnect()
   }
   catch (const std::runtime_error& e)
   {
-    qDebug() << "SpatGRIS error: " << e.what();
+    qDebug() << "Spatialization error: " << e.what();
   }
   catch (...)
   {
-    qDebug() << "SpatGRIS error";
+    qDebug() << "Spatialization error";
   }
 
   return connected();

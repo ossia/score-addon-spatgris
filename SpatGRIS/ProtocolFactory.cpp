@@ -21,7 +21,7 @@ namespace SpatGRIS
 
 QString ProtocolFactory::prettyName() const noexcept
 {
-  return QObject::tr("SpatGRIS");
+  return QObject::tr("Spatialization");
 }
 
 QString ProtocolFactory::category() const noexcept

@@ -20,6 +20,11 @@ add_library(score_addon_spatgris
   SpatGRIS/ProtocolSettingsWidget.hpp
   SpatGRIS/SpecificSettings.hpp
   SpatGRIS/SpecificSettingsSerialization.cpp
+  
+  Spatialization/BaseProtocol.hpp
+  Spatialization/SpatGRISProtocol.hpp
+  Spatialization/ADMOSCProtocol.hpp
+  Spatialization/SPATProtocol.hpp
 
   score_addon_spatgris.hpp
   score_addon_spatgris.cpp
