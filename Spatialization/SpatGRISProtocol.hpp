@@ -83,16 +83,15 @@ public:
     }
   }
 
-  bool push(const ossia::net::parameter_base& param, const ossia::value& v) override
+  bool
+  push(const ossia::net::parameter_base& param, const ossia::value& v) override
   {
     using namespace ossia::net;
     using writer_type = ossia::net::socket_writer<ossia::net::udp_send_socket>;
     using send_visitor = ossia::net::osc_value_send_visitor<
-        ossia::net::full_parameter_data,
+        ossia::net::parameter_base,
         osc_extended_policy,
         writer_type>;
-
-    const ossia::net::full_parameter_data pd;
 
     // 1. Update our internal data model
     // Locate the index of the source from the name of the parent
@@ -107,7 +106,7 @@ public:
     auto& source = this->m_model.sources[it->second];
     auto send_car = [&]
     {
-      send_visitor{pd, "/spat/serv", writer_type{m_socket}}(
+      send_visitor{param, "/spat/serv", writer_type{m_socket}}(
           std::vector<ossia::value>{
               "car",
               it->second + 1,
@@ -120,13 +119,13 @@ public:
 
     auto send_clear = [&]
     {
-      send_visitor{pd, "/spat/serv", writer_type{m_socket}}(
+      send_visitor{param, "/spat/serv", writer_type{m_socket}}(
           std::vector<ossia::value>{"clr", it->second + 1});
     };
 
     auto send_alg = [&]
     {
-      send_visitor{pd, "/spat/serv", writer_type{m_socket}}(
+      send_visitor{param, "/spat/serv", writer_type{m_socket}}(
           std::vector<ossia::value>{
               "alg", source.algo == 0 ? "dome" : "cube"});
     };

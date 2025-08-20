@@ -16,6 +16,7 @@ struct SpecificSettings
 {
   QString host = "127.0.0.1";
   int port{18032};
+  int inputPort{0}; // 0 means no input port
   int sources{16};
   SpatFormat format{SpatFormat::SpatGRIS};
   int programs{1}; // For ADM-OSC

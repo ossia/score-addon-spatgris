@@ -48,6 +48,12 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
   m_port->setRange(0, 65535);
   m_port->setValue(18032);
   m_port->setWhatsThis(tr("On which port the app is expecting OSC messages."));
+  
+  m_inputPort = new QSpinBox(this);
+  m_inputPort->setRange(0, 65535);
+  m_inputPort->setValue(0);
+  m_inputPort->setWhatsThis(tr("Input port for bidirectional communication (0 = disabled)."));
+  m_inputPort->setEnabled(false);
 
   m_control = new QSpinBox{this};
   m_control->setRange(1, 256);
@@ -75,16 +81,20 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
           case 0:
             m_deviceNameEdit->setText("SpatGRIS");
             m_port->setValue(18032);
+            m_inputPort->setEnabled(false);
             m_programs->setEnabled(false);
             break;
           case 1:
             m_deviceNameEdit->setText("ADM-OSC");
             m_port->setValue(4001);
+            m_inputPort->setEnabled(true);
+            m_inputPort->setValue(4002);
             m_programs->setEnabled(false);
             break;
           case 2:
             m_deviceNameEdit->setText("SPAT");
             m_port->setValue(9000);
+            m_inputPort->setEnabled(false);
             m_programs->setEnabled(true);
             m_programs->setToolTip(tr("Number of rooms (SPAT Revolution)"));
             break;
@@ -95,7 +105,8 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
   layout->addRow(tr("Name"), m_deviceNameEdit);
   layout->addRow(tr("Format"), m_format);
   layout->addRow(tr("Host"), m_host);
-  layout->addRow(tr("Port"), m_port);
+  layout->addRow(tr("Output Port"), m_port);
+  layout->addRow(tr("Input Port"), m_inputPort);
   layout->addRow(tr("Source/Object count"), m_control);
   layout->addRow(tr("Program/Room count"), m_programs);
 
@@ -114,6 +125,7 @@ Device::DeviceSettings ProtocolSettingsWidget::getSettings() const
   SpecificSettings settings{};
   settings.host = this->m_host->text();
   settings.port = this->m_port->value();
+  settings.inputPort = this->m_inputPort->value();
   settings.sources = this->m_control->value();
   settings.format = static_cast<SpatFormat>(this->m_format->currentIndex());
   settings.programs = this->m_programs->value();
@@ -130,9 +142,11 @@ void ProtocolSettingsWidget::setSettings(
       = settings.deviceSpecificSettings.value<SpecificSettings>();
   m_host->setText(specif.host);
   m_port->setValue(specif.port);
+  m_inputPort->setValue(specif.inputPort);
   m_control->setValue(specif.sources);
   m_format->setCurrentIndex(static_cast<int>(specif.format));
   m_programs->setValue(specif.programs);
+  m_inputPort->setEnabled(specif.format == SpatFormat::ADMOSC);
   m_programs->setEnabled(specif.format == SpatFormat::ADMOSC || specif.format == SpatFormat::SPAT);
 }
 }

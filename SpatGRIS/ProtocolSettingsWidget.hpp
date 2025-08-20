@@ -29,6 +29,7 @@ private:
   QLineEdit* m_deviceNameEdit{};
   QLineEdit* m_host{};
   QSpinBox* m_port{};
+  QSpinBox* m_inputPort{};
   QSpinBox* m_control{};
   QComboBox* m_format{};
   QSpinBox* m_programs{};

@@ -58,7 +58,7 @@ bool DeviceImplementation::reconnect()
         break;
       case SpatFormat::ADMOSC:
         protocol = std::make_unique<Spatialization::ADMOSCProtocol>(
-            this->m_ctx.networkContext(), socket, set.sources);
+            this->m_ctx.networkContext(), socket, set.sources, set.inputPort);
         break;
       case SpatFormat::SPAT:
         protocol = std::make_unique<Spatialization::SPATProtocol>(
