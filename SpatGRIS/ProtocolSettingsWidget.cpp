@@ -54,6 +54,7 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
   m_inputPort->setValue(0);
   m_inputPort->setWhatsThis(tr("Input port for bidirectional communication (0 = disabled)."));
   m_inputPort->setEnabled(false);
+  checkForChanges(m_inputPort);
 
   m_control = new QSpinBox{this};
   m_control->setRange(1, 256);
@@ -64,7 +65,8 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
   m_format->addItem("ADM-OSC");
   m_format->addItem("SPAT Revolution");
   m_format->setCurrentIndex(0);
-  
+  checkForChanges(m_format);
+
   m_programs = new QSpinBox{this};
   m_programs->setRange(0, 16);
   m_programs->setValue(1);
@@ -81,7 +83,8 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
           case 0:
             m_deviceNameEdit->setText("SpatGRIS");
             m_port->setValue(18032);
-            m_inputPort->setEnabled(false);
+            m_inputPort->setEnabled(true);
+            m_inputPort->setValue(18033);
             m_programs->setEnabled(false);
             break;
           case 1:
@@ -146,7 +149,7 @@ void ProtocolSettingsWidget::setSettings(
   m_control->setValue(specif.sources);
   m_format->setCurrentIndex(static_cast<int>(specif.format));
   m_programs->setValue(specif.programs);
-  m_inputPort->setEnabled(specif.format == SpatFormat::ADMOSC);
+  m_inputPort->setEnabled(specif.format == SpatFormat::SpatGRIS || specif.format == SpatFormat::ADMOSC);
   m_programs->setEnabled(specif.format == SpatFormat::ADMOSC || specif.format == SpatFormat::SPAT);
 }
 }

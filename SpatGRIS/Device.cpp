@@ -49,12 +49,12 @@ bool DeviceImplementation::reconnect()
         .broadcast = false};
 
     std::unique_ptr<ossia::net::protocol_base> protocol;
-    
+
     switch(set.format)
     {
       case SpatFormat::SpatGRIS:
         protocol = std::make_unique<Spatialization::SpatGRISProtocol>(
-            this->m_ctx.networkContext(), socket, set.sources);
+            this->m_ctx.networkContext(), socket, set.sources, set.inputPort);
         break;
       case SpatFormat::ADMOSC:
         protocol = std::make_unique<Spatialization::ADMOSCProtocol>(
