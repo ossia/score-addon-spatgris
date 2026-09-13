@@ -1,6 +1,6 @@
 {
   "src": "<url to the .zip file created by the release script>",
-  "name": "My Device",
+  "name": "SpatGRIS",
   "raw_name": "score-addon-my-device",
   "version": "1.0",
   "kind": "addon",
