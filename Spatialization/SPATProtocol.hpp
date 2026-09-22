@@ -131,10 +131,12 @@ public:
       const ossia::net::network_context_ptr& ctx,
       const ossia::net::outbound_socket_configuration& socket,
       int source_count,
-      int room_count = 1)
+      int room_count = 1,
+      int source_offset = 0)
       : BaseProtocol{ctx, socket}
       , m_sources{std::clamp(source_count, 1, 256)}
       , m_rooms{std::clamp(room_count, 1, 16)}
+      , m_source_offset{source_offset}
       , m_socket{socket, ctx->context}
   {
     m_socket.connect();
@@ -364,6 +366,7 @@ public:
     
     // Cache indices
     build_cache(dev.get_root_node());
+    build_address_cache(dev.get_root_node(), "/source/", m_source_offset);
   }
 
   bool push(const ossia::net::parameter_base& param, const ossia::value& v) override
@@ -377,12 +380,11 @@ public:
     
     const ossia::net::full_parameter_data pd;
 
-    // Build OSC address from parameter path
-
-    // Send the OSC message
-    v.apply(
-        send_visitor{
-            pd, param.get_node().osc_address(), writer_type{m_socket}});
+    if(const auto* addr = cached_address(param.get_node()))
+      v.apply(send_visitor{pd, *addr, writer_type{m_socket}});
+    else
+      v.apply(
+          send_visitor{pd, param.get_node().osc_address(), writer_type{m_socket}});
 
     // Update internal model
     update_model(param, v);
@@ -486,6 +488,7 @@ private:
   
   int m_sources{1};
   int m_rooms{1};
+  int m_source_offset{0};
   ossia::net::udp_send_socket m_socket;
   
   spat_model m_model;

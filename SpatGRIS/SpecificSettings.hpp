@@ -20,6 +20,11 @@ struct SpecificSettings
   int sources{16};
   SpatFormat format{SpatFormat::SpatGRIS};
   int programs{1}; // For ADM-OSC
+
+  //! Index of the first source on the wire: source n of this device is
+  //! transmitted as source n + sourceOffset. The device tree keeps numbering
+  //! its sources from 1.
+  int sourceOffset{0};
 };
 }
 

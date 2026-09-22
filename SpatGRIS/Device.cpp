@@ -54,15 +54,18 @@ bool DeviceImplementation::reconnect()
     {
       case SpatFormat::SpatGRIS:
         protocol = std::make_unique<Spatialization::SpatGRISProtocol>(
-            this->m_ctx.networkContext(), socket, set.sources, set.inputPort);
+            this->m_ctx.networkContext(), socket, set.sources, set.inputPort,
+            set.sourceOffset);
         break;
       case SpatFormat::ADMOSC:
         protocol = std::make_unique<Spatialization::ADMOSCProtocol>(
-            this->m_ctx.networkContext(), socket, set.sources, set.inputPort);
+            this->m_ctx.networkContext(), socket, set.sources, set.inputPort,
+            set.sourceOffset);
         break;
       case SpatFormat::SPAT:
         protocol = std::make_unique<Spatialization::SPATProtocol>(
-            this->m_ctx.networkContext(), socket, set.sources, set.programs);
+            this->m_ctx.networkContext(), socket, set.sources, set.programs,
+            set.sourceOffset);
         break;
     }
     

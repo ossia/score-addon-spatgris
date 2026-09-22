@@ -72,6 +72,14 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
   m_programs->setValue(1);
   m_programs->setEnabled(false);
 
+  m_sourceOffset = new QSpinBox{this};
+  m_sourceOffset->setRange(0, 255);
+  m_sourceOffset->setValue(0);
+  m_sourceOffset->setWhatsThis(
+      tr("Index of the first source on the remote end: source 1 of this device "
+         "is sent as source 1 + offset."));
+  checkForChanges(m_sourceOffset);
+
   connect(
       m_format,
       QOverload<int>::of(&QComboBox::currentIndexChanged),
@@ -111,6 +119,7 @@ ProtocolSettingsWidget::ProtocolSettingsWidget(QWidget* parent)
   layout->addRow(tr("Output Port"), m_port);
   layout->addRow(tr("Input Port"), m_inputPort);
   layout->addRow(tr("Source/Object count"), m_control);
+  layout->addRow(tr("Source offset"), m_sourceOffset);
   layout->addRow(tr("Program/Room count"), m_programs);
 
   setLayout(layout);
@@ -132,6 +141,7 @@ Device::DeviceSettings ProtocolSettingsWidget::getSettings() const
   settings.sources = this->m_control->value();
   settings.format = static_cast<SpatFormat>(this->m_format->currentIndex());
   settings.programs = this->m_programs->value();
+  settings.sourceOffset = this->m_sourceOffset->value();
   s.deviceSpecificSettings = QVariant::fromValue(settings);
 
   return s;
@@ -149,6 +159,7 @@ void ProtocolSettingsWidget::setSettings(
   m_control->setValue(specif.sources);
   m_format->setCurrentIndex(static_cast<int>(specif.format));
   m_programs->setValue(specif.programs);
+  m_sourceOffset->setValue(specif.sourceOffset);
   m_inputPort->setEnabled(specif.format == SpatFormat::SpatGRIS || specif.format == SpatFormat::ADMOSC);
   m_programs->setEnabled(specif.format == SpatFormat::ADMOSC || specif.format == SpatFormat::SPAT);
 }
