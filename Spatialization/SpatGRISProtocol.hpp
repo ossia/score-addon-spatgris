@@ -32,10 +32,12 @@ public:
       const ossia::net::network_context_ptr& ctx,
       const ossia::net::outbound_socket_configuration& socket,
       int source_count,
-      int input_port = 0)
+      int input_port = 0,
+      int source_offset = 0)
       : BaseProtocol{ctx, socket}
       , m_sources{std::clamp(source_count, 1, 256)}
       , m_input_port{input_port}
+      , m_source_offset{source_offset}
       , m_socket{socket, ctx->context}
   {
     m_socket.connect();
@@ -122,7 +124,7 @@ public:
       send_visitor{param, "/spat/serv", writer_type{m_socket}}(
           std::vector<ossia::value>{
               "car",
-              it->second + 1,
+              it->second + 1 + m_source_offset,
               source.x,
               source.y,
               source.z,
@@ -133,7 +135,7 @@ public:
     auto send_clear = [&]
     {
       send_visitor{param, "/spat/serv", writer_type{m_socket}}(
-          std::vector<ossia::value>{"clr", it->second + 1});
+          std::vector<ossia::value>{"clr", it->second + 1 + m_source_offset});
     };
 
     auto send_alg = [&]
@@ -395,6 +397,7 @@ private:
 
   int m_sources{0};
   int m_input_port{0};
+  int m_source_offset{0};
   ossia::net::udp_send_socket m_socket;
   std::unique_ptr<ossia::net::udp_receive_socket> m_receive_socket;
 

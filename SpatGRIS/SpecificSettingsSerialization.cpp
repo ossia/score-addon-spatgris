@@ -6,7 +6,8 @@
 template <>
 void DataStreamReader::read(const SpatGRIS::SpecificSettings& n)
 {
-  m_stream << n.host << n.port << n.inputPort << n.sources << static_cast<int>(n.format) << n.programs;
+  m_stream << n.host << n.port << n.inputPort << n.sources << static_cast<int>(n.format)
+           << n.programs << n.sourceOffset;
   insertDelimiter();
 }
 
@@ -16,6 +17,14 @@ void DataStreamWriter::write(SpatGRIS::SpecificSettings& n)
   int format = 0;
   m_stream >> n.host >> n.port >> n.inputPort >> n.sources >> format >> n.programs;
   n.format = static_cast<SpatGRIS::SpatFormat>(format);
+
+  // Settings saved without a source offset have the delimiter here instead.
+  int32_t next = 0;
+  m_stream >> next;
+  if(next == int32_t(0xDEADBEEF))
+    return;
+
+  n.sourceOffset = next;
   checkDelimiter();
 }
 
@@ -28,6 +37,7 @@ void JSONReader::read(const SpatGRIS::SpecificSettings& n)
   obj["Sources"] = n.sources;
   obj["Format"] = static_cast<int>(n.format);
   obj["Programs"] = n.programs;
+  obj["SourceOffset"] = n.sourceOffset;
 }
 
 template<>
@@ -48,4 +58,6 @@ void JSONWriter::write(SpatGRIS::SpecificSettings &n)
     }
     if(obj.tryGet("Programs"))
         n.programs <<= obj["Programs"];
+    if(obj.tryGet("SourceOffset"))
+        n.sourceOffset <<= obj["SourceOffset"];
 }

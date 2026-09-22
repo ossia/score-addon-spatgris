@@ -23,10 +23,12 @@ public:
       const ossia::net::network_context_ptr& ctx,
       const ossia::net::outbound_socket_configuration& socket,
       int object_count,
-      int input_port = 0)
+      int input_port = 0,
+      int source_offset = 0)
       : BaseProtocol{ctx, socket}
       , m_objects(object_count)
       , m_input_port{input_port}
+      , m_source_offset{source_offset}
       , m_send_socket{socket, ctx->context}
       , m_timer{ctx->context}
   {
@@ -206,6 +208,8 @@ public:
       p->set_domain(ossia::make_domain(-1.f, 1.f));
     }
 
+    build_address_cache(root, "/adm/obj/", m_source_offset);
+
     // Set up input socket if port is specified
     if (m_input_port > 0)
     {
@@ -222,11 +226,12 @@ public:
         osc_extended_policy,
         writer_type>;
 
-    v.apply(
-        send_visitor{
-            param,
-            param.get_node().osc_address(),
-            writer_type{m_send_socket}});
+    if(const auto* addr = cached_address(param.get_node()))
+      v.apply(send_visitor{param, *addr, writer_type{m_send_socket}});
+    else
+      v.apply(
+          send_visitor{
+              param, param.get_node().osc_address(), writer_type{m_send_socket}});
 
     return false;
   }
@@ -268,11 +273,13 @@ public:
 
   bool observe(ossia::net::parameter_base& address, bool enable) override
   {
+    // The far end answers on the address we send to, offset included.
+    const auto* addr = cached_address(address.get_node());
+    const auto osc = addr ? *addr : address.get_node().osc_address();
     if (enable)
-      m_listening.insert(
-          std::make_pair(address.get_node().osc_address(), &address));
+      m_listening.insert(std::make_pair(osc, &address));
     else
-      m_listening.erase(address.get_node().osc_address());
+      m_listening.erase(osc);
     return true;
   }
   bool update(ossia::net::node_base& node_base) override { return false; }
@@ -328,6 +335,7 @@ private:
 
   int m_objects{1};
   int m_input_port{0};
+  int m_source_offset{0};
   ossia::net::udp_send_socket m_send_socket;
   std::unique_ptr<ossia::net::udp_receive_socket> m_receive_socket;
   boost::asio::steady_timer m_timer;

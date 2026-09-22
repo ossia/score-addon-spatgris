@@ -33,5 +33,6 @@ private:
   QSpinBox* m_control{};
   QComboBox* m_format{};
   QSpinBox* m_programs{};
+  QSpinBox* m_sourceOffset{};
 };
 }
